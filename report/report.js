@@ -2,24 +2,29 @@
 const fs = require('fs')
 const path = require('path');
 const homeFolderPath = process.env.HOME;
-const fileName = 'report.txt';
+const fileName = 'report.csv';
 
 exports.logReport = function logReport(input) {
-    const natureContrats = findNbOfProperty(input, "typeContrat");
-    console.log("Nature des contrats", natureContrats);
+    const natureContratTitle = 'Nature des contrats';
+    const natureContrats = findNbOfProperty(input, 'typeContrat');
+    console.log(natureContratTitle, natureContrats);
 
-    const entreprises = findNbOfProperty(input, "entreprise", "nom");
-    console.log("Noms des entreprises", entreprises);
+    const entreprisesTitle = 'Noms des entreprises';
+    const entreprises = findNbOfProperty(input, 'entreprise', 'nom');
+    console.log(entreprisesTitle, entreprises);
 
-    const lieuxTravail = findNbOfProperty(input, "lieuTravail", "commune");
-    console.log("lieux de Travail", lieuxTravail);
+    const lieuxTravailTitle = 'Lieux de Travail';
+    const lieuxTravail = findNbOfProperty(input, 'lieuTravail', 'libelle');
+    console.log(lieuxTravailTitle, lieuxTravail);
 
-    let result = {}
-    result["natureContrats"] = natureContrats
-    result["entreprises"] =entreprises
-    result["lieuxTravail"] =lieuxTravail
-    
-    writeToFile(JSON.stringify(result))
+    let csv = natureContratTitle + '\n';
+    csv += JsonToCsv(natureContrats, 'typeContrat', 'occurrence');
+    csv += entreprisesTitle + '\n';
+    csv += JsonToCsv(entreprises, 'entreprise', 'occurrence');
+    csv += lieuxTravailTitle + '\n';
+    csv += JsonToCsv(lieuxTravail, 'lieuTravail', 'occurrence');
+
+    writeToFile(csv)
 }
 
 // write the report to server 
@@ -32,6 +37,23 @@ function writeToFile(text) {
             return
         }
     })
+}
+
+// rearrange the object to return csv format
+function JsonToCsv(JsonArray, title, result) {
+    let addedLines = '';
+    JsonArray.forEach(element => {
+        if (!element[title]) {
+            eltTitle = title + ' not found';
+        } else {
+            eltTitle = element[title];
+        }
+        eltResult = element[result];
+
+
+        addedLines += eltTitle + ';' + eltResult + '\n';
+    })
+    return addedLines;
 }
 
 // get the number of occurence in an array of property propertyName or in subProperty propertyName.secondLevelPropertyName
@@ -51,11 +73,11 @@ function findNbOfProperty(input, propertyName, secondPropertyName) {
             result.forEach((res) => {
                 if (secondPropertyName) {
                     if (res[propertyName] === obj[propertyName][secondPropertyName]) {
-                        res["occurrence"]++
+                        res['occurrence']++
                     }
                 } else {
                     if (res[propertyName] === obj[propertyName]) {
-                        res["occurrence"]++
+                        res['occurrence']++
                     }
                 }
             })
@@ -68,7 +90,7 @@ function findNbOfProperty(input, propertyName, secondPropertyName) {
             } else {
                 value[propertyName] = obj[propertyName]
             }
-            value["occurrence"] = 1
+            value['occurrence'] = 1
             result.push(value);
         }
     })

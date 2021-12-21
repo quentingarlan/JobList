@@ -3,6 +3,7 @@ const router = express.Router();
 const poleEmploi = require('../poleEmploi/poleEmploiCalls');
 const mongoClient = require('../db/mongoClient');
 const report = require('../report/report');
+const fileName = 'report.csv';
 
 /* Insert job infos in db (this should be a post but then you would have to use postman to test, keep like this for now) */
 router.get('/insert', function (req, res) {
@@ -13,7 +14,7 @@ router.get('/insert', function (req, res) {
       // Add or update offers from pole emploi in jobList database
       mongoClient.AddOffers(offers.resultats);
       res.send('offers inserted!');
-    } else{
+    } else {
       res.send('no offers found');
     }
   });
@@ -23,7 +24,7 @@ router.get('/report', function (req, res) {
   mongoClient.GetOffers(function (offers) {
     report.logReport(offers);
 
-    res.redirect('/folder/report.txt');
+    res.redirect('/folder/' + fileName);
   });
 });
 module.exports = router;

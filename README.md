@@ -18,7 +18,7 @@ For now we can only insert offers by page from poleEmploi limited to 150 offers 
 pole emploi offers from 150 to 299
 
 - Retrieve statistics report with http://localhost:3000/job/report this should log reports in console
-and redirect to a file written on server http://localhost:3000/folder/report.txt
+and redirect to a file written on server http://localhost:3000/folder/report.csv
 
 # TODO
 - Create a docker image for install (tested with docker compose insert in db does not work)
