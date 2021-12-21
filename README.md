@@ -21,7 +21,7 @@ pole emploi offers from 150 to 299
 and redirect to a file written on server http://localhost:3000/folder/report.txt
 
 # TODO
-- Maybe create a docker image for install 
+- Create a docker image for install (tested with docker compose insert in db does not work)
 - Change to typescript and create an offer class
 - Test poleEmploi returned object (minimum check that properties used in update function did not change name)
 - Move client secret / id to a config file (find equivalent to .net appsettings in node.js)
