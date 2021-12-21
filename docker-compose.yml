@@ -1,0 +1,17 @@
+version: "1"
+services:
+      login-app:
+          container_name: jobList
+          image: repo
+          restart: always
+          build: .
+          ports:
+            - "3000:3000"
+      mongo:
+          image: mongo
+          ports:
+            - 27017:27017
+          volumes:
+            - mongodb:/data/db
+volumes:
+ mongodb:

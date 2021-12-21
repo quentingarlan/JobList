@@ -6,10 +6,11 @@ exports.getPoleEmploiOffers = function getPoleEmploiOffers(page, callback) {
         const poleEmploiUrl = 'api.emploi-store.fr'
         const inseeZipCodes = '35238,33063,75101' // Rennes 35238, bordeaux 33063, Paris,75101
 
-        // limit is 150 offers, more and we get a 206 partial result
+        // limit is 150 offers returned by request, range limit is 1000
         let range = getRangeFromPage(page);
         console.log('range', range);
-        const pathOffers = '/partenaire/offresdemploi/v2/offres/search?commune=' + inseeZipCodes + range;
+        // sort=1 -> Tri par date de création décroissant, pertinence décroissante, distance croissante
+        const pathOffers = '/partenaire/offresdemploi/v2/offres/search?commune=' + inseeZipCodes + range + '&sort=1';
         const options = {
             hostname: poleEmploiUrl,
             port: 443,
@@ -20,7 +21,7 @@ exports.getPoleEmploiOffers = function getPoleEmploiOffers(page, callback) {
             }
         }
         const req = https.request(options, res => {
-            console.log(`statusCode getPoleEmploiOffers: ${res.statusCode}`)
+            console.log(`getPoleEmploiOffers statusCode: ${res.statusCode}`)
 
             // lots of data to process so we get it in parts
             let offersInParts = [];
@@ -52,7 +53,7 @@ function getRangeFromPage(page) {
     let rangeMultiplicator = 150
     minRange = page * rangeMultiplicator - rangeMultiplicator
     maxRange = page * rangeMultiplicator - 1
-    return '&range=' + minRange + '-' + maxRange;
+    return `&range=${minRange}-${maxRange}`;
 }
 
 // Get acces token from pole emploi 
